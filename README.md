@@ -23,7 +23,7 @@ Merge this branch into `main` on GitHub (or pick this branch as the production b
 3. Name it `wishlist` and click **Create**. You don't need to run any SQL; the tables are created automatically.
 
 ### 3. Create the Pages site
-1. In the sidebar, open **Workers & Pages → Create → Pages → Connect to Git** (sometimes labelled "Import an existing Git repository").
+1. In the sidebar, open **Workers & Pages → Create**. **Important:** don't use the main "Import a repository" button, which creates a *Worker*. A Worker ignores the `functions/` folder and won't let you add passwords ("Variables cannot be added to a Worker that only has static assets"). Instead, click the small link at the bottom: **"Looking to deploy Pages? Get started"**, then **Import an existing Git repository**. Your site's address should end in `.pages.dev`, not `.workers.dev`.
 2. Authorize GitHub and select the **wishlist** repository.
 3. Build settings:
    - **Framework preset:** None
