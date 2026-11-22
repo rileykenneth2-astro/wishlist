@@ -1,0 +1,10 @@
+{
+  "name": "christmas-wishlist",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev public --d1 DB=wishlist-local --compatibility-date=2026-11-01"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
