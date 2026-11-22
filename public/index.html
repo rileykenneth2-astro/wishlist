@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Christmas Wishlist</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎄</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="snow" aria-hidden="true"></div>
+
+  <!-- Login -->
+  <main id="login-view" class="login hidden">
+    <div class="login-card">
+      <div class="login-emoji" aria-hidden="true">🎁</div>
+      <h1 class="site-title">Our Christmas Wishlist</h1>
+      <p class="muted">Enter the password you were given.</p>
+      <form id="login-form">
+        <input id="login-password" type="password" autocomplete="current-password" placeholder="Password" required />
+        <button class="btn btn-primary" type="submit">Open the wishlist</button>
+        <p id="login-error" class="error" role="alert"></p>
+      </form>
+    </div>
+  </main>
+
+  <!-- App -->
+  <div id="app-view" class="hidden">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <h1 class="site-title">Our Christmas Wishlist</h1>
+        <div class="topbar-actions">
+          <label id="me-picker-wrap" class="me-picker hidden" title="Hides purchases on your own list so you aren't spoiled">
+            <span>This is me:</span>
+            <select id="me-picker"></select>
+          </label>
+          <span id="role-badge" class="badge"></span>
+          <button id="logout-btn" class="btn btn-ghost btn-sm">Log out</button>
+        </div>
+      </div>
+      <nav class="tabs-wrap">
+        <div id="tabs" class="tabs" role="tablist"></div>
+      </nav>
+    </header>
+
+    <main class="content">
+      <div id="banner" class="banner hidden"></div>
+
+      <section id="empty-people" class="empty hidden">
+        <div class="empty-emoji" aria-hidden="true">🎄</div>
+        <h2>No lists yet</h2>
+        <p id="empty-people-text" class="muted"></p>
+        <button id="empty-add-person" class="btn btn-primary hidden">Create the first list</button>
+      </section>
+
+      <section id="list-section" class="hidden">
+        <div class="list-head">
+          <div>
+            <h2 id="list-name"></h2>
+            <p id="list-sub" class="muted"></p>
+          </div>
+          <div class="list-actions">
+            <label class="toggle-inline">
+              <input type="checkbox" id="hide-bought" /> Hide bought items
+            </label>
+            <button id="person-settings-btn" class="btn btn-ghost btn-sm owner-only">List settings</button>
+            <button id="add-item-btn" class="btn btn-primary owner-only">+ Add item</button>
+          </div>
+        </div>
+        <div id="grid" class="grid"></div>
+        <div id="empty-items" class="empty hidden">
+          <div class="empty-emoji" aria-hidden="true">🧦</div>
+          <p class="muted" id="empty-items-text"></p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Item editor -->
+  <dialog id="item-dialog" class="dialog">
+    <form id="item-form" method="dialog">
+      <h2 id="item-dialog-title">Add an item</h2>
+      <label class="field">
+        <span>Link to the item</span>
+        <div class="row">
+          <input id="f-url" type="url" inputmode="url" placeholder="https://…  (paste a product link)" />
+          <button type="button" id="fetch-btn" class="btn btn-ghost btn-sm">Get details</button>
+        </div>
+        <small id="fetch-status" class="muted"></small>
+      </label>
+      <div class="editor-preview">
+        <div id="f-preview" class="thumb thumb-lg"></div>
+        <div class="editor-fields">
+          <label class="field"><span>Name</span><input id="f-title" maxlength="200" placeholder="e.g. Wool hiking socks" /></label>
+          <label class="field"><span>Price <em>(optional)</em></span><input id="f-price" maxlength="40" placeholder="$25" /></label>
+        </div>
+      </div>
+      <label class="field">
+        <span>Picture link <em>(filled in automatically, or paste your own)</em></span>
+        <input id="f-image" type="url" inputmode="url" placeholder="https://…/picture.jpg" />
+        <small class="muted">Tip: on the product page, right-click (or long-press) the photo, choose “Copy image address”, and paste it here.</small>
+      </label>
+      <label class="field">
+        <span>Details: size, color, style, anything helpful</span>
+        <textarea id="f-notes" rows="4" maxlength="2000" placeholder="Size M, navy or forest green. Any brand is fine."></textarea>
+      </label>
+      <div class="row-split">
+        <label class="field">
+          <span>Whose list?</span>
+          <select id="f-person"></select>
+        </label>
+        <label class="toggle-inline big"><input type="checkbox" id="f-most" /> ⭐ Most wanted</label>
+      </div>
+      <p id="item-error" class="error" role="alert"></p>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary" id="item-save">Save item</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Claim -->
+  <dialog id="claim-dialog" class="dialog dialog-sm">
+    <form id="claim-form" method="dialog">
+      <h2>Mark as bought 🎉</h2>
+      <p class="muted" id="claim-item-name"></p>
+      <label class="field">
+        <span>Your name <em>(optional, helps others coordinate)</em></span>
+        <input id="claim-name" maxlength="60" placeholder="e.g. Aunt Sue" autocomplete="name" />
+      </label>
+      <p id="claim-error" class="error" role="alert"></p>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-green">I bought it</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Person settings / create -->
+  <dialog id="person-dialog" class="dialog dialog-sm">
+    <form id="person-form" method="dialog">
+      <h2 id="person-dialog-title">New list</h2>
+      <label class="field">
+        <span>Whose list is this?</span>
+        <input id="p-name" maxlength="60" required placeholder="e.g. Riley" />
+      </label>
+      <label class="toggle-inline big">
+        <input type="checkbox" id="p-hide" checked />
+        <span>Keep purchases a surprise from list owners</span>
+      </label>
+      <small class="muted block">Leave this on for your own lists. Turn it off for kids' lists if you two want to see what's already been bought for them.</small>
+      <p id="person-error" class="error" role="alert"></p>
+      <div class="dialog-actions">
+        <button type="button" id="p-delete" class="btn btn-danger-ghost hidden">Delete list</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>
